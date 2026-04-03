@@ -1,0 +1,185 @@
+env:
+  CLAUDE_CODE_USE_POWERSHELL_TOOL: "1"
+  CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS: "1"
+  ANTHROPIC_MODEL: "us.anthropic.claude-opus-4-6[1m]-v1[1m]"
+  ANTHROPIC_DEFAULT_OPUS: "us.anthropic.claude-opus-4-6[1m]-v1[1m]"
+  ANTHROPIC_BEDROCK_MODEL: "us.anthropic.claude-opus-4-6[1m]-v1[1m]"
+  ENABLE_TOOL_SEARCH: "true"
+
+premissions:
+  allow:
+    - "Skill"
+    - "Agent"
+
+    - "Bash(cd *)"
+
+    # Readonly
+    - "Bash(ls *)"
+    - "Bash(cat *)"
+    - "Bash(grep *)"
+    - "Bash(find *)"
+    - "Bash(tree *)"
+    - "Bash(head *)"
+    - "Bash(tail *)"
+    - "Bash(less *)"
+    - "Bash(more *)"
+    - "Bash(wc *)"
+    - "Bash(which *)"
+    - "Bash(pwd)"
+    - "Bash(file *)"
+    - "Bash(stat *)"
+    - "Bash(du *)"
+    - "Bash(df *)"
+    - "Bash(ps *)"
+    - "Bash(top *)"
+    - "Bash(env *)"
+    - "Bash(printenv *)"
+    - "Bash(echo *)"
+    - "Bash(date *)"
+    - "Bash(whoami)"
+    - "Bash(uname *)"
+    - "Bash(hostname *)"
+
+    # Write 
+    - "Bash(source *)"
+    - "Bash(mkdir -p *)"
+    - "Bash(cp *)"
+    - "Bash(cat > *)"
+
+    # git
+    - "Bash(git status *)"
+    - "Bash(git log *)"
+    - "Bash(git diff *)"
+    - "Bash(git add *)"
+    - "Bash(git show *)"
+    - "Bash(git branch *)"
+    - "Bash(git remote *)"
+    - "Bash(git ls *)"
+    - "Bash(git rev-parse *)"
+    - "Bash(git commit *)"
+
+    # github cli
+    - "Bash(gh pr view *)"
+    - "Bash(gh pr list *)"
+
+    # python
+    - "Bash(uv *)"
+    
+    # WebFetch
+    - "WebFetch"
+
+    # Edit
+    - "Edit(//tmp/**)"
+    # - "Edit(//tmp/**)"
+    # - "Edit(//tmp/**)"
+    # - "Edit(//tmp/**)"
+    # - "Edit(//tmp/**)"
+
+    # Mcps
+    # github
+    # https://github.com/upstash/context7 documentation finder
+
+  ask:
+    - "Bash(git push *)"
+    - "Bash(git * push *)"
+    - "Bash(git remote *)"
+    - "Bash(git * remote)"
+    - "Bash(uv publish *)"
+    - "Bash(uv * publish *)"
+    - "Bash(docker *)"
+
+  deny:
+    # Dangerous system commands
+    - "Bash(sudo *)"
+    - "Bash(su *)"
+    - "Bash(dd *)"
+    - "Bash(mkfs *)"
+    - "Bash(mount *)"
+    - "Bash(umount *)"
+
+    # Python other than uv
+    - "Bash(pip *)"
+    - "Bash(python *)"
+    - "Bash(python3 *)"
+    - "Bash(pipx *)"
+
+    # Network (prevent exfiltration)
+    - "Bash(curl *)"
+    - "Bash(wget *)"
+    - "Bash(ssh *)"
+    - "Bash(scp *)"
+    - "Bash(rsync *)"
+
+    # Process management
+    - "Bash(kill *)"
+    - "Bash(pkill *)"
+    - "Bash(systemctl *)"
+
+    # Destructive
+    - "Bash(rm -rf *)"
+    - "Bash(rm -r *)"
+
+    # Sensitive reads
+    - "Read(./.env)"
+    - "Read(./.env.*)"
+    - "Read(./**/secrets/**)"
+    - "Read(~/.ssh/**)"
+    - "Read(~/.aws/**)"
+
+additionalDirectories:
+  # in windows `/c/User/<username>` == `~/`
+  # The above is the "linux-y" version of C:\\User\<username>
+  # alias for ~/AppData/Local/Temp
+  - "//tmp"
+
+  # all my code
+  - "~/source"
+
+  # Where lots of things are installed
+  - "~/AppData/Local"
+autoMemoryEnabled: false
+defaultMode: "acceptEdits"
+hooks: {}
+statusLine:
+  type: "command"
+  command: "~/.claude/statusline.sh"
+  padding: 0
+
+enabledPlugins:
+  "superpowers:superpowers-dev": true
+
+extraKnownMarketplaces:
+  superpowers-dev:
+    source: git
+    url: "https://github.com/obra/superpowers.git"
+  
+# Claude sandbox (bubblewrap container)
+# Creates a hard security boundary. Even if a bash command
+# passes the permission rules above, brwap contains where it
+# can actually read and write
+sandbox:
+  enabled: true
+  autoAllowBashIfSandboxed: true
+  allowUnsandboxedCommands: false
+
+  # brwap mounts
+  filesystem:
+    allowRead:
+      - "~/AppData/Local"
+    allowWrite:
+      - "//tmp"
+      - "~/source"
+      - "~/.cache"
+  network:
+    # Allow just github for now
+    allowedDomains:
+      - "github.com"
+      - "google.com"
+
+
+
+
+
+
+    
+    

@@ -1,0 +1,35 @@
+[user]
+    email = alex.darch@btinternet.com
+    name = alex darch
+[alias]
+    checkoutr = checkout
+[push]
+    default = current
+    autoSetupRemote = true
+[pull]
+    rebase = false
+[merge]
+    defaultStrategy = ort
+[gc]
+    auto = 0
+[diff "astextplain"]
+    textconv = astextplain
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+[http]
+    sslbackend = schannel
+[core]
+    autocrlf = true
+    fscache = true
+    symlinks = false
+    editor = "C:\\Users\\alexd\\AppData\\Local\\Programs\\Microsoft VS Code\\bin\\code" --wait
+    sshcommand = C:/Windows/System32/OpenSSH/ssh.exe
+[credential]
+    helper = manager
+[credential "https://dev.azure.com"]
+    usehttppath = true
+[init]
+    defaultbranch = main
