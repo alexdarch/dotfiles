@@ -1,9 +1,9 @@
 env:
   CLAUDE_CODE_USE_POWERSHELL_TOOL: "1"
   CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS: "1"
-  ANTHROPIC_MODEL: "us.anthropic.claude-opus-4-6[1m]-v1[1m]"
-  ANTHROPIC_DEFAULT_OPUS: "us.anthropic.claude-opus-4-6[1m]-v1[1m]"
-  ANTHROPIC_BEDROCK_MODEL: "us.anthropic.claude-opus-4-6[1m]-v1[1m]"
+  # ANTHROPIC_MODEL: "us.anthropic.claude-opus-4-6[1m]-v1[1m]"
+  # ANTHROPIC_DEFAULT_OPUS: "us.anthropic.claude-opus-4-6[1m]-v1[1m]"
+  # ANTHROPIC_BEDROCK_MODEL: "us.anthropic.claude-opus-4-6[1m]-v1[1m]"
   ENABLE_TOOL_SEARCH: "true"
 
 premissions:
@@ -142,11 +142,16 @@ defaultMode: "acceptEdits"
 hooks: {}
 statusLine:
   type: "command"
-  command: "~/.claude/statusline.sh"
+  command: "__STATUSLINE_COMMAND__"
+  # Linux: ~/.claude/statusline.sh
+  # Windows: powershell.exe -NoProfile -File ~/.claude/statusline.ps1
   padding: 0
 
 enabledPlugins:
   "superpowers:superpowers-dev": true
+
+model: "opus[1m]"
+# model: "us.anthropic.claude-opus-4-6[1m]-v1[1m]"
 
 extraKnownMarketplaces:
   superpowers-dev:

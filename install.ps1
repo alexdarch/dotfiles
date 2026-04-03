@@ -23,3 +23,6 @@ cmd /c mklink "$ProfileLink" "$ProfileTarget"
 
 # Install IDE extensions
 & "$DotfilesDir\ide\install_ide.ps1"
+
+# Install Claude Code config
+& "$DotfilesDir\claude_setup\install_claude.ps1"

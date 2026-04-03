@@ -1,0 +1,141 @@
+{
+  "env": {
+    "ENABLE_TOOL_SEARCH": "true",
+    "CLAUDE_CODE_USE_POWERSHELL_TOOL": "1",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "model": "opus[1m]",
+  "hooks": {},
+  "statusLine": {
+    "type": "command",
+    "command": "powershell.exe -NoProfile -File ~/.claude/statusline.ps1",
+    "padding": 0
+  },
+  "enabledPlugins": {
+    "superpowers:superpowers-dev": true,
+    "superpowers@superpowers-dev": true
+  },
+  "extraKnownMarketplaces": {
+    "superpowers-dev": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/obra/superpowers.git"
+      }
+    }
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "allowUnsandboxedCommands": false,
+    "network": {
+      "allowedDomains": [
+        "github.com",
+        "google.com"
+      ]
+    },
+    "filesystem": {
+      "allowWrite": [
+        "//tmp",
+        "~/source",
+        "~/.cache"
+      ],
+      "allowRead": [
+        "~/AppData/Local"
+      ]
+    }
+  },
+  "autoMemoryEnabled": false,
+  "defaultMode": "acceptEdits",
+  "premissions": {
+    "allow": [
+      "Skill",
+      "Agent",
+      "Bash(cd *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(grep *)",
+      "Bash(find *)",
+      "Bash(tree *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(less *)",
+      "Bash(more *)",
+      "Bash(wc *)",
+      "Bash(which *)",
+      "Bash(pwd)",
+      "Bash(file *)",
+      "Bash(stat *)",
+      "Bash(du *)",
+      "Bash(df *)",
+      "Bash(ps *)",
+      "Bash(top *)",
+      "Bash(env *)",
+      "Bash(printenv *)",
+      "Bash(echo *)",
+      "Bash(date *)",
+      "Bash(whoami)",
+      "Bash(uname *)",
+      "Bash(hostname *)",
+      "Bash(source *)",
+      "Bash(mkdir -p *)",
+      "Bash(cp *)",
+      "Bash(cat > *)",
+      "Bash(git status *)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git add *)",
+      "Bash(git show *)",
+      "Bash(git branch *)",
+      "Bash(git remote *)",
+      "Bash(git ls *)",
+      "Bash(git rev-parse *)",
+      "Bash(git commit *)",
+      "Bash(gh pr view *)",
+      "Bash(gh pr list *)",
+      "Bash(uv *)",
+      "WebFetch",
+      "Edit(//tmp/**)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(git * push *)",
+      "Bash(git remote *)",
+      "Bash(git * remote)",
+      "Bash(uv publish *)",
+      "Bash(uv * publish *)",
+      "Bash(docker *)"
+    ],
+    "deny": [
+      "Bash(sudo *)",
+      "Bash(su *)",
+      "Bash(dd *)",
+      "Bash(mkfs *)",
+      "Bash(mount *)",
+      "Bash(umount *)",
+      "Bash(pip *)",
+      "Bash(python *)",
+      "Bash(python3 *)",
+      "Bash(pipx *)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(ssh *)",
+      "Bash(scp *)",
+      "Bash(rsync *)",
+      "Bash(kill *)",
+      "Bash(pkill *)",
+      "Bash(systemctl *)",
+      "Bash(rm -rf *)",
+      "Bash(rm -r *)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/secrets/**)",
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)"
+    ]
+  },
+  "additionalDirectories": [
+    "//tmp",
+    "~/source",
+    "~/AppData/Local"
+  ]
+}

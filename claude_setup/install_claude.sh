@@ -1,76 +1,45 @@
-
-
+#!/bin/bash
 set -uo pipefail
 
-WD="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
-DOTFILES_DIR="$(dirname "$WD")"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
+
+# =======================
+# 1. Install Claude Code
+# =======================
 
 if ! command -v claude > /dev/null; then
-    echo "WARNING: claude not found, skipping claude cli configuration"
+    echo "WARNING: claude not found. Install it first:"
+    echo "  curl -fsSL https://claude.ai/install.sh | sh"
     exit 0
 fi
 
 # =======================
-# 1. Install Claude CLI Configuration
+# 2. Settings and symlinks
 # =======================
 
-echo "Installing claude cli config"
+echo "Installing claude CLI config..."
 mkdir -p ~/.claude
 
-
-# Install-Module -Name powershell-yaml -Force -Repository PSGallery -Scope CurrentUser
-# # Convert YAML to PowerShell Object
-# $PsYaml = (ConvertFrom-Yaml -Yaml $RawYaml)
-
-# # Convert the Object to JSON
-# $PsJson = @($PsYaml | ConvertTo-Json)
-
-# # Convert JSON back to PowerShell Array
-# $PsArray = @($PsJson | ConvertFrom-Json)
-
-# # Convert the Array to YAML
-# ConvertTo-Yaml -Data $PsArray
-
-# Generate settings.json from the yaml. This lets us keep comments in yaml
+# Generate settings.json from yaml
 if command -v yq > /dev/null; then
-    bash -c "yq -o json  '$WD/settings.yaml' > '$WD/generated-settings.json'"
+    yq -o json "$SCRIPT_DIR/settings.yaml" | sed 's|__STATUSLINE_COMMAND__|bash ~/.claude/statusline.sh|g' > "$SCRIPT_DIR/generated-settings.json"
 else
-    echo "WARNING: yq not found, skipping settings.yaml."
-    echo "     install with sudo apt-get install -y yq"
+    echo "WARNING: yq not found, skipping settings.yaml conversion."
+    echo "  Install with: sudo apt-get install -y yq"
 fi
 
-ln -sfn "$WD/generated-settings.json" "~/.claude/settings.json"
-ln -sfn "$WD/CLAUDE.md" "~/.claude/CLAUDE.md"
-ln -sfn "$WD/statusline/statusline.sh" "~/.claude/statusline.sh"
-
-# install claude code
-irm https://claude.ai/install.ps1 | iex
-
+# Symlink settings, CLAUDE.md, and statusline
+ln -sfn "$SCRIPT_DIR/generated-settings.json" ~/.claude/settings.json
+ln -sfn "$SCRIPT_DIR/CLAUDE.md" ~/.claude/CLAUDE.md
+ln -sfn "$SCRIPT_DIR/statusline/statusline.sh" ~/.claude/statusline.sh
+chmod +x "$SCRIPT_DIR/statusline/statusline.sh"
 
 # =======================
-# 2. Configure plugins
+# 3. Shared claude CLI config (plugins, MCPs, hooks, skills)
 # =======================
 
-# Superpowers
-claude plugin marketplace add https://github.com/obra/superpowers.git
-claude plugin install superpowers@superpowers-dev
-
-
-# =======================
-# 3. Configure MCPs
-# =======================
-
-
-
-# =======================
-# 4. Configure skills and commands
-# =======================
-
-
-
-# =======================
-# 3. Configure hooks
-# =======================
-
+echo "Running shared claude configuration..."
+bash "$SCRIPT_DIR/configure_claude.sh"
 
 echo "CLAUDE SETUP COMPLETE"
