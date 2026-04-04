@@ -24,9 +24,6 @@ claude plugin install superpowers@superpowers-dev
 # Anthropic skills marketplace
 claude plugin marketplace add https://github.com/anthropics/skills.git
 
-# Document handling (docx, pdf, pptx, xlsx)
-claude plugin install document-skills@anthropic-agent-skills
-
 # MCP builder + skill creator
 claude plugin install example-skills@anthropic-agent-skills
 

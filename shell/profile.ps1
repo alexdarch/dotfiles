@@ -56,3 +56,11 @@ if (Test-Path($ChocolateyProfile)) {
 
 # Add uv
 $env:Path = "C:\Users\alexd\.local\bin;$env:Path"
+
+# GitHub token (for GitHub MCP and gh-dependent tools)
+if (Get-Command gh -ErrorAction SilentlyContinue) {
+    $ghStatus = gh auth status 2>&1
+    if ($LASTEXITCODE -eq 0) {
+        $env:GITHUB_PERSONAL_ACCESS_TOKEN = (gh auth token 2>$null)
+    }
+}

@@ -67,6 +67,20 @@ foreach ($link in $Symlinks.GetEnumerator()) {
 # 3. Shared claude CLI config (plugins, MCPs, hooks, skills)
 # =======================
 
+# =======================
+# 3. Windows-only plugins
+# =======================
+
+Write-Host "Installing Windows-only plugins..." -ForegroundColor Cyan
+
+# Document handling (docx, pdf, pptx, xlsx) — useful for Office integrations on Windows
+claude plugin marketplace add https://github.com/anthropics/skills.git
+claude plugin install document-skills@anthropic-agent-skills
+
+# =======================
+# 4. Shared claude CLI config (plugins, MCPs, hooks, skills)
+# =======================
+
 Write-Host "Running shared claude configuration..." -ForegroundColor Cyan
 bash "$ScriptDir\configure_claude.sh"
 
