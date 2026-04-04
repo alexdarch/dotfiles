@@ -2,25 +2,22 @@
 # Claude Code statusline - reads JSON from stdin
 # Line 1: [time magenta] model (blue) | path (dark blue) git (light blue)
 # Line 2: context bar (green/orange/red) with tokens | cost (yellow)
-# Uses node for JSON parsing (available via Claude Code, no jq dependency)
+# Uses python for JSON parsing (via uv run)
 
 DATA=$(cat)
 
-# Parse all JSON fields in one node call
-eval "$(echo "$DATA" | node -e "
-const d=[];
-process.stdin.on('data',c=>d.push(c));
-process.stdin.on('end',()=>{
-  try {
-    const j=JSON.parse(d.join(''));
-    const out = (k,v) => console.log(k+'='+JSON.stringify(v||''));
-    out('J_CWD', j.cwd);
-    out('J_MODEL', (j.model||{}).display_name);
-    out('J_PCT', (j.context_window||{}).used_percentage);
-    out('J_WIN', (j.context_window||{}).context_window_size);
-    out('J_COST', (j.cost||{}).total_cost_usd);
-  } catch(e) {}
-});
+# Parse all JSON fields in one python call
+eval "$(echo "$DATA" | uv run --no-project python -c "
+import sys, json
+try:
+    j = json.load(sys.stdin)
+    def out(k, v): print(f'{k}={json.dumps(v or \"\")}')
+    out('J_CWD', j.get('cwd'))
+    out('J_MODEL', (j.get('model') or {}).get('display_name'))
+    out('J_PCT', (j.get('context_window') or {}).get('used_percentage'))
+    out('J_WIN', (j.get('context_window') or {}).get('context_window_size'))
+    out('J_COST', (j.get('cost') or {}).get('total_cost_usd'))
+except: pass
 ")"
 
 # ANSI escape codes

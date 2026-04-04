@@ -14,6 +14,9 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 # Install system packages, uv, claude
 "$DOTFILES_DIR/packages/install_packages.sh"
 
+# Install shell config (zsh, bashrc, profile)
+"$DOTFILES_DIR/shell/install_shell.sh"
+
 # Install git config
 "$DOTFILES_DIR/git/git_install.sh"
 

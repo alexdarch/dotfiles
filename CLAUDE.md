@@ -26,6 +26,12 @@ ide/
   install_ide.sh          # Linux: same
 
 shell/
+  .profile           # Shared env vars, PATH, aliases (sourced by .bashrc and .zshrc)
+  .bashrc            # Bash-specific: history, completions, fzf
+  .zshrc             # Zsh-specific: zinit, plugins, fzf
+  prompt.bash        # Bash prompt: user@host: path [git] $ (uses __git_ps1)
+  prompt.zsh         # Zsh prompt: user@host: path [git] % (uses __git_ps1)
+  install_shell.sh   # Linux: symlinks shell configs, sets zsh as default
   profile.ps1        # PowerShell profile (symlinked to WindowsPowerShell dir)
 
 claude_setup/

@@ -14,6 +14,10 @@ permissions:
     - "Skill"
     - "Agent"
 
+    # WebFetch/Search
+    - "WebFetch"
+    - "WebSearch"
+
     - "Bash(cd *)"
 
     # Readonly
@@ -72,11 +76,11 @@ permissions:
     - "Bash(uv init *)"
     - "Bash(uvx *)"
     
-    # WebFetch
-    - "WebFetch"
+
 
     # Edit
     - "Edit(__TEMP_DIR__/**)"
+    - "Edit(~/**)"
 
     # Mcps
     # github
