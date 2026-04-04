@@ -20,29 +20,42 @@ Write-Host "Installing claude CLI config..." -ForegroundColor Cyan
 $ClaudeDir = Join-Path $HOME ".claude"
 if (-not (Test-Path $ClaudeDir)) { New-Item -ItemType Directory -Path $ClaudeDir | Out-Null }
 
-# Generate settings.json from yaml using powershell-yaml module
-if (-not (Get-Module -ListAvailable -Name powershell-yaml)) {
-    Write-Host "Installing powershell-yaml module..." -ForegroundColor Cyan
-    Install-Module -Name powershell-yaml -Force -Repository PSGallery -Scope CurrentUser
-}
+# Generate settings.json from yaml using uv + pyyaml (powershell-yaml mangles nested structures)
 $GeneratedSettings = Join-Path $ScriptDir "generated-settings.json"
-$RawYaml = Get-Content -Raw (Join-Path $ScriptDir "settings.yaml")
-$PsObj = ConvertFrom-Yaml -Yaml $RawYaml
-$Json = $PsObj | ConvertTo-Json -Depth 20
-$Json = $Json -replace "__STATUSLINE_COMMAND__", "powershell.exe -NoProfile -File ~/.claude/statusline.ps1"
-$Json | Out-File -Encoding utf8 $GeneratedSettings
+$SettingsYaml = Join-Path $ScriptDir "settings.yaml"
+& uv run --with pyyaml --no-project python -c "
+import yaml, json, sys
+with open(sys.argv[1]) as f:
+    data = yaml.safe_load(f)
+j = json.dumps(data, indent=2)
+j = j.replace('__STATUSLINE_COMMAND__', 'powershell.exe -NoProfile -File ~/.claude/statusline.ps1')
+with open(sys.argv[2], 'w', encoding='utf-8', newline='\n') as f:
+    f.write(j + '\n')
+" $SettingsYaml $GeneratedSettings
 
-# Symlink settings and CLAUDE.md
+# Build skills.yaml from all SKILL.md files under ~/.claude
+Write-Host "Building skills.yaml..." -ForegroundColor Cyan
+$SkillsScript = Join-Path $ScriptDir "skills\build_skills_yaml.py"
+$SkillsOut = Join-Path $ClaudeDir "skills.yaml"
+& uv run --no-project --script $SkillsScript $ClaudeDir -o $SkillsOut
+
+# Symlink settings, CLAUDE.md, and hooks dir
 $Symlinks = @{
     (Join-Path $ClaudeDir "settings.json")  = Join-Path $ScriptDir "generated-settings.json"
     (Join-Path $ClaudeDir "CLAUDE.md")      = Join-Path $ScriptDir "CLAUDE.md"
     (Join-Path $ClaudeDir "statusline.ps1") = Join-Path $ScriptDir "statusline\statusline.ps1"
+    (Join-Path $ClaudeDir "hooks")          = Join-Path $ScriptDir "hooks"
 }
 
 foreach ($link in $Symlinks.GetEnumerator()) {
-    if (Test-Path $link.Key) { Remove-Item $link.Key -Force }
+    if (Test-Path $link.Key) { Remove-Item $link.Key -Force -Recurse }
     if (Test-Path $link.Value) {
-        cmd /c mklink "$($link.Key)" "$($link.Value)"
+        $isDir = (Get-Item $link.Value).PSIsContainer
+        if ($isDir) {
+            cmd /c mklink /D "$($link.Key)" "$($link.Value)"
+        } else {
+            cmd /c mklink "$($link.Key)" "$($link.Value)"
+        }
     } else {
         Write-Host "WARNING: $($link.Value) not found, skipping symlink" -ForegroundColor Yellow
     }

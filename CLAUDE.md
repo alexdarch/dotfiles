@@ -1,6 +1,8 @@
 # Dotfiles
 
 Cross-platform dotfiles for Windows (primary) and Linux. Manages config for git, IDE, shell, and Claude Code.
+If you are making changes to this repo then it is this CLAUDE.md (./CLAUDE.md) you should change.
+The ./claude_setup/CLAUDE.md is the global one symlinked to ~/.claude/CLAUDE.md. DO NOT CHANGE THIS UNLESS SPECIFICALLY ASKED.
 
 ## Structure
 
@@ -31,6 +33,12 @@ claude_setup/
   statusline/
     statusline.ps1        # Windows statusline script
     statusline.sh         # Linux statusline script
+  hooks/                  # Symlinked as directory to ~/.claude/hooks
+    event-logger.py       # Logs hook events to ~/.claude/hooks-logs/
+    encourage_skill_usage.py  # UserPromptSubmit hook: suggests relevant skills via Haiku
+  skills/
+    build_skills_yaml.py  # Scans ~/.claude for SKILL.md files, writes ~/.claude/skills.yaml
+    test_build_skills_yaml.py  # Tests for build_skills_yaml.py
 ```
 
 ## Conventions

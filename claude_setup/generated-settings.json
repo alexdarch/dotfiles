@@ -1,52 +1,11 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
-    "ENABLE_TOOL_SEARCH": "true",
     "CLAUDE_CODE_USE_POWERSHELL_TOOL": "1",
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "ENABLE_TOOL_SEARCH": "true",
   },
-  "model": "opus[1m]",
-  "hooks": {},
-  "statusLine": {
-    "type": "command",
-    "command": "powershell.exe -NoProfile -File ~/.claude/statusline.ps1",
-    "padding": 0
-  },
-  "enabledPlugins": {
-    "superpowers:superpowers-dev": true,
-    "superpowers@superpowers-dev": true
-  },
-  "extraKnownMarketplaces": {
-    "superpowers-dev": {
-      "source": {
-        "source": "git",
-        "url": "https://github.com/obra/superpowers.git"
-      }
-    }
-  },
-  "sandbox": {
-    "enabled": true,
-    "autoAllowBashIfSandboxed": true,
-    "allowUnsandboxedCommands": false,
-    "network": {
-      "allowedDomains": [
-        "github.com",
-        "google.com"
-      ]
-    },
-    "filesystem": {
-      "allowWrite": [
-        "//tmp",
-        "~/source",
-        "~/.cache"
-      ],
-      "allowRead": [
-        "~/AppData/Local"
-      ]
-    }
-  },
-  "autoMemoryEnabled": false,
-  "defaultMode": "acceptEdits",
-  "premissions": {
+  "permissions": {
     "allow": [
       "Skill",
       "Agent",
@@ -96,15 +55,6 @@
       "WebFetch",
       "Edit(//tmp/**)"
     ],
-    "ask": [
-      "Bash(git push *)",
-      "Bash(git * push *)",
-      "Bash(git remote *)",
-      "Bash(git * remote)",
-      "Bash(uv publish *)",
-      "Bash(uv * publish *)",
-      "Bash(docker *)"
-    ],
     "deny": [
       "Bash(sudo *)",
       "Bash(su *)",
@@ -131,8 +81,90 @@
       "Read(./**/secrets/**)",
       "Read(~/.ssh/**)",
       "Read(~/.aws/**)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(git * push *)",
+      "Bash(git remote *)",
+      "Bash(git * remote)",
+      "Bash(uv publish *)",
+      "Bash(uv * publish *)",
+      "Bash(docker *)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "model": "opus[1m]",
+  "hooks": {
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --no-project ~/.claude/hooks/event-logger.py"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --no-project ~/.claude/hooks/event-logger.py"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --no-project --script ~/.claude/hooks/encourage_skill_usage.py"
+          }
+        ]
+      }
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "powershell.exe -NoProfile -File ~/.claude/statusline.ps1",
+    "padding": 0
+  },
+  "enabledPlugins": {
+    "superpowers:superpowers-dev": true,
+    "superpowers@superpowers-dev": true
+  },
+  "extraKnownMarketplaces": {
+    "superpowers-dev": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/obra/superpowers.git"
+      }
+    }
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "allowUnsandboxedCommands": false,
+    "network": {
+      "allowedDomains": [
+        "github.com",
+        "google.com"
+      ]
+    },
+    "filesystem": {
+      "allowWrite": [
+        "//tmp",
+        "~/source",
+        "~/.cache"
+      ],
+      "allowRead": [
+        "~/AppData/Local"
+      ]
+    }
+  },
+  "autoMemoryEnabled": false,
   "additionalDirectories": [
     "//tmp",
     "~/source",

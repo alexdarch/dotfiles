@@ -21,18 +21,26 @@ fi
 echo "Installing claude CLI config..."
 mkdir -p ~/.claude
 
-# Generate settings.json from yaml
-if command -v yq > /dev/null; then
-    yq -o json "$SCRIPT_DIR/settings.yaml" | sed 's|__STATUSLINE_COMMAND__|bash ~/.claude/statusline.sh|g' > "$SCRIPT_DIR/generated-settings.json"
-else
-    echo "WARNING: yq not found, skipping settings.yaml conversion."
-    echo "  Install with: sudo apt-get install -y yq"
-fi
+# Generate settings.json from yaml using uv + pyyaml
+uv run --with pyyaml --no-project python -c "
+import yaml, json, sys
+with open(sys.argv[1]) as f:
+    data = yaml.safe_load(f)
+j = json.dumps(data, indent=2)
+j = j.replace('__STATUSLINE_COMMAND__', 'bash ~/.claude/statusline.sh')
+with open(sys.argv[2], 'w', encoding='utf-8', newline='\n') as f:
+    f.write(j + '\n')
+" "$SCRIPT_DIR/settings.yaml" "$SCRIPT_DIR/generated-settings.json"
 
-# Symlink settings, CLAUDE.md, and statusline
+# Build skills.yaml from all SKILL.md files under ~/.claude
+echo "Building skills.yaml..."
+uv run --no-project --script "$SCRIPT_DIR/skills/build_skills_yaml.py" ~/.claude -o ~/.claude/skills.yaml
+
+# Symlink settings, CLAUDE.md, statusline, and hooks dir
 ln -sfn "$SCRIPT_DIR/generated-settings.json" ~/.claude/settings.json
 ln -sfn "$SCRIPT_DIR/CLAUDE.md" ~/.claude/CLAUDE.md
 ln -sfn "$SCRIPT_DIR/statusline/statusline.sh" ~/.claude/statusline.sh
+ln -sfn "$SCRIPT_DIR/hooks" ~/.claude/hooks
 chmod +x "$SCRIPT_DIR/statusline/statusline.sh"
 
 # =======================
