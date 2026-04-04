@@ -43,11 +43,10 @@ permissions:
     - "Bash(uname *)"
     - "Bash(hostname *)"
 
-    # Write 
-    - "Bash(source *)"
+    # Write (scoped to safe directories)
     - "Bash(mkdir -p *)"
-    - "Bash(cp *)"
-    - "Bash(cat > *)"
+    - "Bash(cp * ~/source/*)"
+    - "Bash(cp * //tmp/*)"
 
     # git
     - "Bash(git status *)"
@@ -65,8 +64,12 @@ permissions:
     - "Bash(gh pr view *)"
     - "Bash(gh pr list *)"
 
-    # python
-    - "Bash(uv *)"
+    # python (tightened — uv run can execute arbitrary code)
+    - "Bash(uv run --no-project --script *)"
+    - "Bash(uv run --no-project --with *)"
+    - "Bash(uv run --no-project python *)"
+    - "Bash(uv init *)"
+    - "Bash(uvx *)"
     
     # WebFetch
     - "WebFetch"
@@ -121,6 +124,13 @@ permissions:
     # Destructive
     - "Bash(rm -rf *)"
     - "Bash(rm -r *)"
+    - "Bash(mv *)"
+    - "Bash(chmod *)"
+    - "Bash(ln *)"
+
+    # Write to arbitrary locations
+    - "Bash(cat > *)"
+    - "Bash(source *)"
 
     # Sensitive reads
     - "Read(./.env)"
@@ -129,6 +139,9 @@ permissions:
     - "Read(~/.ssh/**)"
     - "Read(~/.aws/**)"
 
+# additionalDirectories: extends where Claude's built-in file tools (Read, Edit, Glob, Grep)
+# can operate. Does NOT affect Bash subprocesses — those are governed by sandbox.filesystem.
+# Think of this as "IDE-level" access: Claude can read/edit files here, subject to permission mode.
 additionalDirectories:
   # in windows `/c/User/<username>` == `~/`
   # The above is the "linux-y" version of C:\\User\<username>
@@ -172,16 +185,22 @@ extraKnownMarketplaces:
     source: git
     url: "https://github.com/obra/superpowers.git"
   
-# Claude sandbox (bubblewrap container)
-# Creates a hard security boundary. Even if a bash command
-# passes the permission rules above, brwap contains where it
-# can actually read and write
+# Sandbox: OS-level process isolation for Bash subprocesses.
+# Uses Seatbelt on macOS, bubblewrap on Linux/WSL2.
+# On native Windows: not yet supported — sandbox settings are ignored and Bash runs unsandboxed.
+# Even so, keeping these configured means they'll apply automatically if you run in WSL2,
+# and permissions.allow/deny still gate what commands Claude will attempt.
+#
+# sandbox.filesystem vs additionalDirectories:
+#   additionalDirectories = where Claude's file tools (Read/Edit/Glob) can reach
+#   sandbox.filesystem    = where Bash subprocesses can reach at the OS level
+# They're complementary: a dir in additionalDirectories but not sandbox.filesystem.allowWrite
+# means Claude can Read/Edit it but Bash commands cannot write to it.
 sandbox:
   enabled: true
   autoAllowBashIfSandboxed: true
   allowUnsandboxedCommands: false
 
-  # brwap mounts
   filesystem:
     allowRead:
       - "~/AppData/Local"
@@ -190,7 +209,6 @@ sandbox:
       - "~/source"
       - "~/.cache"
   network:
-    # Allow just github for now
     allowedDomains:
       - "github.com"
       - "google.com"

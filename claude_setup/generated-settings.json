@@ -3,7 +3,7 @@
   "env": {
     "CLAUDE_CODE_USE_POWERSHELL_TOOL": "1",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "ENABLE_TOOL_SEARCH": "true",
+    "ENABLE_TOOL_SEARCH": "true"
   },
   "permissions": {
     "allow": [
@@ -35,10 +35,9 @@
       "Bash(whoami)",
       "Bash(uname *)",
       "Bash(hostname *)",
-      "Bash(source *)",
       "Bash(mkdir -p *)",
-      "Bash(cp *)",
-      "Bash(cat > *)",
+      "Bash(cp * ~/source/*)",
+      "Bash(cp * //tmp/*)",
       "Bash(git status *)",
       "Bash(git log *)",
       "Bash(git diff *)",
@@ -51,7 +50,11 @@
       "Bash(git commit *)",
       "Bash(gh pr view *)",
       "Bash(gh pr list *)",
-      "Bash(uv *)",
+      "Bash(uv run --no-project --script *)",
+      "Bash(uv run --no-project --with *)",
+      "Bash(uv run --no-project python *)",
+      "Bash(uv init *)",
+      "Bash(uvx *)",
       "WebFetch",
       "Edit(//tmp/**)"
     ],
@@ -76,6 +79,11 @@
       "Bash(systemctl *)",
       "Bash(rm -rf *)",
       "Bash(rm -r *)",
+      "Bash(mv *)",
+      "Bash(chmod *)",
+      "Bash(ln *)",
+      "Bash(cat > *)",
+      "Bash(source *)",
       "Read(./.env)",
       "Read(./.env.*)",
       "Read(./**/secrets/**)",
