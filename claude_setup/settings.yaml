@@ -68,6 +68,7 @@ permissions:
     # github cli
     - "Bash(gh pr view *)"
     - "Bash(gh pr list *)"
+    - "Bash(gh auth status)"
 
     # python (tightened — uv run can execute arbitrary code)
     - "Bash(uv run --no-project --script *)"
@@ -82,9 +83,13 @@ permissions:
     - "Edit(__TEMP_DIR__/**)"
     - "Edit(~/**)"
 
-    # Mcps
-    # github
-    # https://github.com/upstash/context7 documentation finder
+    # MCPs
+    # GitHub (@modelcontextprotocol/server-github)
+    - "mcp__github__*"
+    # Context7 documentation finder (https://github.com/upstash/context7)
+    - "mcp__context7__*"
+    # IDE integration
+    - "mcp__ide__*"
 
   ask:
     - "Bash(git push *)"
@@ -198,18 +203,24 @@ sandbox:
 
   filesystem:
     allowRead:
+      - "~/.claude"
+      - "~/source"
+      - "~/.cache"
       # Windows only (removed on Linux)
       - "__APPDATA_DIR__"
     allowWrite:
       - "__TEMP_DIR__"
       - "~/source"
       - "~/.cache"
+      - "~/.claude"
   network:
     allowedDomains:
       - "github.com"
       - "google.com"
-
-
+      - "api.anthropic.com"
+      - "registry.npmjs.org"
+      - "api.github.com"
+      - "mcp-proxy.anthropic.com"
 
 
 

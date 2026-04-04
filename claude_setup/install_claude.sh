@@ -49,8 +49,8 @@ with open(sys.argv[2], 'w', encoding='utf-8', newline='\n') as f:
 echo "Building skills.yaml..."
 uv run --no-project --script "$SCRIPT_DIR/skills/build_skills_yaml.py" ~/.claude -o ~/.claude/skills.yaml
 
-# Symlink settings, CLAUDE.md, statusline, and hooks dir
-ln -sfn "$SCRIPT_DIR/generated-settings.json" ~/.claude/settings.json
+# Copy settings (not symlink — bubblewrap can't resolve symlinks for its own config)
+cp "$SCRIPT_DIR/generated-settings.json" ~/.claude/settings.json
 ln -sfn "$SCRIPT_DIR/CLAUDE.md" ~/.claude/CLAUDE.md
 ln -sfn "$SCRIPT_DIR/statusline/statusline.sh" ~/.claude/statusline.sh
 ln -sfn "$SCRIPT_DIR/hooks" ~/.claude/hooks

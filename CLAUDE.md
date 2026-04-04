@@ -66,3 +66,18 @@ claude_setup/
   - `CLAUDE_CODE_USE_POWERSHELL_TOOL` env var is removed on Linux
 - `generated-settings.json` is gitignored output - always regenerate from `settings.yaml`
 - Shared cross-platform logic (claude CLI commands) goes in `.sh` files called via `bash` from both platforms
+
+## MCP Servers
+
+- **GitHub**: `@modelcontextprotocol/server-github` (stdio, user scope). Uses `GITHUB_PERSONAL_ACCESS_TOKEN` env var set dynamically in `.profile` via `gh auth token`. Do NOT use `@anthropic/github-mcp-server` or `github@claude-plugins-official` — those require a GitHub Copilot subscription.
+- **Context7**: `@upstash/context7-mcp` (stdio, user scope). Documentation lookup for libraries/frameworks.
+- **IDE**: Built-in MCP for IDE integration (VS Code / JetBrains).
+- **claude.ai managed MCPs** (Slack, Notion, Linear, etc.): Built-in Anthropic integrations served via `mcp-proxy.anthropic.com`. Cannot be removed or disabled via CLI — they're managed server-side. Harmless if unused (just show "needs authentication" in `claude mcp list`).
+- MCP tool permissions are granted via wildcard patterns in `settings.yaml` (e.g. `mcp__github__*`)
+- MCPs are configured in `configure_claude.sh` via `claude mcp add --scope user`
+
+## Known Issues / Gotchas
+
+- `~/.claude/settings.json` must be a **regular file**, not a symlink. Bubblewrap (bwrap) sandbox can't resolve symlinks when setting up bind mounts, causing all Bash commands to fail. `install_claude.sh` uses `cp` not `ln -sfn`.
+- Sandbox config is read at Claude session launch time — changes require restarting Claude Code.
+- `gh auth token` returns short-lived OAuth tokens (`gho_*`). The `GITHUB_PERSONAL_ACCESS_TOKEN` env var is set dynamically in `.profile` so it refreshes each shell session.

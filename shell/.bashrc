@@ -59,3 +59,4 @@ if command -v fzf >/dev/null 2>&1; then
     [ -f /usr/share/doc/fzf/examples/completion.bash ] && . /usr/share/doc/fzf/examples/completion.bash
 fi
 export PATH="$HOME/.local/bin:$PATH"
+. "$HOME/.cargo/env"

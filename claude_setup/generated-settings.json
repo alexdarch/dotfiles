@@ -5,6 +5,7 @@
     "ENABLE_TOOL_SEARCH": "true"
   },
   "permissions": {
+    "defaultMode": "acceptEdits",
     "allow": [
       "Skill",
       "Agent",
@@ -52,13 +53,26 @@
       "Bash(git commit *)",
       "Bash(gh pr view *)",
       "Bash(gh pr list *)",
+      "Bash(gh auth status)",
       "Bash(uv run --no-project --script *)",
       "Bash(uv run --no-project --with *)",
       "Bash(uv run --no-project python *)",
       "Bash(uv init *)",
       "Bash(uvx *)",
       "Edit(/tmp/**)",
-      "Edit(~/**)"
+      "Edit(~/**)",
+      "mcp__github__*",
+      "mcp__context7__*",
+      "mcp__ide__*"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(git * push *)",
+      "Bash(git remote *)",
+      "Bash(git * remote)",
+      "Bash(uv publish *)",
+      "Bash(uv * publish *)",
+      "Bash(docker *)"
     ],
     "deny": [
       "Bash(sudo *)",
@@ -91,19 +105,13 @@
       "Read(./**/secrets/**)",
       "Read(~/.ssh/**)",
       "Read(~/.aws/**)"
-    ],
-    "ask": [
-      "Bash(git push *)",
-      "Bash(git * push *)",
-      "Bash(git remote *)",
-      "Bash(git * remote)",
-      "Bash(uv publish *)",
-      "Bash(uv * publish *)",
-      "Bash(docker *)"
-    ],
-    "defaultMode": "acceptEdits"
+    ]
   },
-  "model": "opus[1m]",
+  "additionalDirectories": [
+    "/tmp",
+    "~/source"
+  ],
+  "autoMemoryEnabled": false,
   "hooks": {
     "PermissionRequest": [
       {
@@ -142,39 +150,41 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "superpowers:superpowers-dev": true,
-    "superpowers@superpowers-dev": true
+    "superpowers:superpowers-dev": true
   },
+  "model": "opus[1m]",
   "extraKnownMarketplaces": {
     "superpowers-dev": {
-      "source": {
-        "source": "git",
-        "url": "https://github.com/obra/superpowers.git"
-      }
+      "source": "git",
+      "url": "https://github.com/obra/superpowers.git"
     }
   },
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
     "allowUnsandboxedCommands": false,
-    "network": {
-      "allowedDomains": [
-        "github.com",
-        "google.com"
-      ]
-    },
     "filesystem": {
-      "allowWrite": [
-        "/tmp",
+      "allowRead": [
+        "~/.claude",
         "~/source",
         "~/.cache"
       ],
-      "allowRead": []
+      "allowWrite": [
+        "/tmp",
+        "~/source",
+        "~/.cache",
+        "~/.claude"
+      ]
+    },
+    "network": {
+      "allowedDomains": [
+        "github.com",
+        "google.com",
+        "api.anthropic.com",
+        "registry.npmjs.org",
+        "api.github.com",
+        "mcp-proxy.anthropic.com"
+      ]
     }
-  },
-  "autoMemoryEnabled": false,
-  "additionalDirectories": [
-    "/tmp",
-    "~/source"
-  ]
+  }
 }

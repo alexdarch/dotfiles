@@ -8,7 +8,7 @@ echo "Installing system packages and tools..."
 # =========================
 
 echo ""
-echo "[1/5] Installing system packages..."
+echo "[1/8] Installing system packages..."
 sudo apt-get update -qq
 sudo apt-get install -y -qq \
     build-essential \
@@ -22,7 +22,8 @@ sudo apt-get install -y -qq \
     zsh \
     fzf \
     eza \
-    ripgrep
+    ripgrep \
+    gh
 
 # Generate en_US.UTF-8 locale if missing
 if ! locale -a 2>/dev/null | grep -q "en_US.utf8"; then
@@ -35,8 +36,40 @@ fi
 # 2. Install uv (Python toolchain)
 # =========================
 
+# =========================
+# 2. Install Node.js (via NodeSource LTS)
+# =========================
+
 echo ""
-echo "[2/5] Installing uv..."
+echo "[2/8] Installing Node.js..."
+if command -v node > /dev/null; then
+    echo "  node already installed: $(node --version)"
+else
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+    sudo apt-get install -y -qq nodejs
+    echo "  Installed: $(node --version)"
+fi
+
+# =========================
+# 3. Install Rust (via rustup)
+# =========================
+
+echo ""
+echo "[3/8] Installing Rust..."
+if command -v cargo > /dev/null; then
+    echo "  cargo already installed: $(cargo --version)"
+else
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    export PATH="$HOME/.cargo/bin:$PATH"
+    echo "  Installed: $(cargo --version)"
+fi
+
+# =========================
+# 4. Install uv (Python toolchain)
+# =========================
+
+echo ""
+echo "[4/8] Installing uv..."
 if command -v uv > /dev/null; then
     echo "  uv already installed: $(uv --version)"
 else
@@ -50,7 +83,7 @@ fi
 # =========================
 
 echo ""
-echo "[3/5] Installing Claude Code..."
+echo "[5/8] Installing Claude Code..."
 if command -v claude > /dev/null; then
     echo "  Claude Code already installed: $(claude --version)"
 else
@@ -63,7 +96,7 @@ fi
 # =========================
 
 echo ""
-echo "[4/5] Installing starship..."
+echo "[6/8] Installing starship..."
 if command -v starship > /dev/null; then
     echo "  starship already installed: $(starship --version)"
 else
@@ -76,7 +109,7 @@ fi
 # =========================
 
 echo ""
-echo "[5/5] Installing zoxide..."
+echo "[7/8] Installing zoxide..."
 if command -v zoxide > /dev/null; then
     echo "  zoxide already installed: $(zoxide --version)"
 else

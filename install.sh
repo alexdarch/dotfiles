@@ -27,6 +27,16 @@ fi
 # Install git config
 "$DOTFILES_DIR/git/git_install.sh"
 
+# Check GitHub CLI auth
+if command -v gh >/dev/null 2>&1; then
+    if ! gh auth status >/dev/null 2>&1; then
+        echo ""
+        echo "GitHub CLI not authenticated. Run: gh auth login"
+        echo "  (needed for GitHub MCP and gh commands)"
+        read -rp "Press Enter to continue without gh auth, or Ctrl+C to stop and auth first"
+    fi
+fi
+
 # Install IDE extensions
 "$DOTFILES_DIR/ide/install_ide.sh"
 

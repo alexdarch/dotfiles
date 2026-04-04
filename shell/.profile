@@ -4,7 +4,7 @@
 # ============================================================
 # PATH
 # ============================================================
-export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/bin:$PATH"
 
 # ============================================================
 # Defaults
@@ -20,6 +20,11 @@ export LC_ALL=""
 
 # zoxide (smarter cd)
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init "$(basename "$SHELL")")"
+
+# GitHub token (for GitHub MCP and gh-dependent tools)
+if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+    export GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token 2>/dev/null)"
+fi
 
 # ============================================================
 # Aliases (shared)
@@ -45,3 +50,4 @@ alias diff='diff --color=auto'
 alias mv='mv -i'
 alias cp='cp -i'
 alias rm='rm -i'
+. "$HOME/.cargo/env"
