@@ -20,7 +20,9 @@ sudo apt-get install -y -qq \
     openssh-client \
     locales \
     zsh \
-    fzf
+    fzf \
+    eza \
+    ripgrep
 
 # Generate en_US.UTF-8 locale if missing
 if ! locale -a 2>/dev/null | grep -q "en_US.utf8"; then

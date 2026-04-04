@@ -11,6 +11,13 @@ grep -qF '/.local/bin' ~/.bashrc 2>/dev/null || echo 'export PATH="$HOME/.local/
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 
+# Configure passwordless sudo (single-user WSL — safe, and Claude's sandbox denies sudo)
+if [ ! -f "/etc/sudoers.d/$USER" ]; then
+    echo "Setting up passwordless sudo..."
+    echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee "/etc/sudoers.d/$USER" >/dev/null
+    sudo chmod 440 "/etc/sudoers.d/$USER"
+fi
+
 # Install system packages, uv, claude
 "$DOTFILES_DIR/packages/install_packages.sh"
 

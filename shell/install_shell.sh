@@ -13,6 +13,6 @@ ln -sfn "$SCRIPT_DIR/.zshrc" "$HOME/.zshrc"
 # Set zsh as default shell (skip if already set)
 if [ "$(basename "$SHELL")" != "zsh" ]; then
     echo "Setting zsh as default shell..."
-    chsh -s "$(which zsh)"
+    sudo chsh -s "$(which zsh)" "$USER"
     echo "  Default shell changed to zsh (takes effect on next login)"
 fi

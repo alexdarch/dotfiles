@@ -1,17 +1,17 @@
 # Dotfiles
 
-Cross-platform dotfiles for WSL2 (primary), Windows, and Linux. Manages config for git, IDE, shell, and Claude Code.
+Cross-platform dotfiles for WSL2 (primary), Windows, and Linux. Manages config for shell, git, IDE, and Claude Code.
 If you are making changes to this repo then it is this CLAUDE.md (./CLAUDE.md) you should change.
 The ./claude_setup/CLAUDE.md is the global one symlinked to ~/.claude/CLAUDE.md. DO NOT CHANGE THIS UNLESS SPECIFICALLY ASKED.
 
 ## Structure
 
 ```
-install.sh           # Single entry point — packages, git, IDE, claude setup, remote switch
+install.sh           # Single entry point — packages, shell, git, IDE, claude setup, remote switch
 install.ps1          # Windows entry point - installs WSL2 (previous native setup commented out)
 
 packages/
-  install_packages.sh # System packages (apt), uv, Claude Code
+  install_packages.sh # System packages (apt), uv, Claude Code, starship, zoxide, eza, ripgrep, fzf
 
 git/
   .gitconfig-linux   # Linux/WSL git config (symlinked to ~/.gitconfig)
@@ -28,9 +28,9 @@ ide/
 shell/
   .profile           # Shared env vars, PATH, aliases (sourced by .bashrc and .zshrc)
   .bashrc            # Bash-specific: history, completions, fzf
-  .zshrc             # Zsh-specific: zinit, plugins, fzf
+  .zshrc             # Zsh-specific: zinit, plugins (syntax highlighting, autosuggestions, completions), fzf
   prompt.bash        # Bash prompt: user@host: path [git] $ (uses __git_ps1)
-  prompt.zsh         # Zsh prompt: user@host: path [git] % (uses __git_ps1)
+  prompt.zsh         # Zsh prompt: user@host: path [git] $ (uses __git_ps1)
   install_shell.sh   # Linux: symlinks shell configs, sets zsh as default
   profile.ps1        # PowerShell profile (symlinked to WindowsPowerShell dir)
 
@@ -43,7 +43,7 @@ claude_setup/
   configure_claude.sh     # Shared claude CLI commands (plugins, MCPs, hooks, skills)
   statusline/
     statusline.ps1        # Windows statusline script
-    statusline.sh         # Linux statusline script
+    statusline.sh         # Linux statusline script (uses uv/python for JSON parsing)
   hooks/                  # Symlinked as directory to ~/.claude/hooks
     event-logger.py       # Logs hook events to ~/.claude/hooks-logs/
     encourage_skill_usage.py  # UserPromptSubmit hook: suggests relevant skills via Haiku
@@ -55,8 +55,10 @@ claude_setup/
 ## Conventions
 
 - Primary dev environment is WSL2; `install.ps1` just bootstraps WSL
-- `install.sh` is the single entry point: installs packages/tools, then configures git, IDE, and Claude
+- `install.sh` is the single entry point: installs packages/tools, then configures shell, git, IDE, and Claude
 - Each subdirectory has its own install script in both `.ps1` (Windows) and `.sh` (Linux) variants
+- Shell setup: zsh is default, bash is configured as fallback. Shared env/aliases in `.profile`, shell-specific config in `.bashrc`/`.zshrc`, prompts in `prompt.bash`/`prompt.zsh`
+- Tools installed: uv, fzf (fuzzy finder), zoxide (smart cd), eza (modern ls), ripgrep (fast grep), starship (prompt, available but not currently used)
 - `settings.yaml` uses placeholders replaced at install time per platform:
   - `__STATUSLINE_COMMAND__` → statusline invocation (bash vs powershell)
   - `__TEMP_DIR__` → `/tmp` (Linux) or `//tmp` (Windows)
