@@ -163,17 +163,22 @@
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
     "allowUnsandboxedCommands": false,
+    "excludedCommands": [
+      "docker *"
+    ],
     "filesystem": {
       "allowRead": [
         "~/.claude",
         "~/source",
-        "~/.cache"
+        "~/.cache",
+        "/var/run/docker.sock"
       ],
       "allowWrite": [
         "/tmp",
         "~/source",
         "~/.cache",
-        "~/.claude"
+        "~/.claude",
+        "/var/run/docker.sock"
       ]
     },
     "network": {
@@ -183,7 +188,10 @@
         "api.anthropic.com",
         "registry.npmjs.org",
         "api.github.com",
-        "mcp-proxy.anthropic.com"
+        "mcp-proxy.anthropic.com",
+        "registry-1.docker.io",
+        "auth.docker.io",
+        "production.cloudflare.docker.com"
       ]
     }
   }

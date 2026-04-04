@@ -51,9 +51,13 @@ uv run --no-project --script "$SCRIPT_DIR/skills/build_skills_yaml.py" ~/.claude
 
 # Copy settings (not symlink — bubblewrap can't resolve symlinks for its own config)
 cp "$SCRIPT_DIR/generated-settings.json" ~/.claude/settings.json
-ln -sfn "$SCRIPT_DIR/CLAUDE.md" ~/.claude/CLAUDE.md
-ln -sfn "$SCRIPT_DIR/statusline/statusline.sh" ~/.claude/statusline.sh
-ln -sfn "$SCRIPT_DIR/hooks" ~/.claude/hooks
+# Copy files (not symlink — bubblewrap can't resolve symlinks for bind mounts)
+cp "$SCRIPT_DIR/CLAUDE.md" ~/.claude/CLAUDE.md
+cp "$SCRIPT_DIR/statusline/statusline.sh" ~/.claude/statusline.sh
+# Copy hooks directory contents (not symlink — bubblewrap can't resolve symlinks)
+rm -rf ~/.claude/hooks
+mkdir -p ~/.claude/hooks
+cp -r "$SCRIPT_DIR/hooks/"* ~/.claude/hooks/ 2>/dev/null || true
 chmod +x "$SCRIPT_DIR/statusline/statusline.sh"
 
 # =======================

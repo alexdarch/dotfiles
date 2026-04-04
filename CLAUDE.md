@@ -2,7 +2,7 @@
 
 Cross-platform dotfiles for WSL2 (primary), Windows, and Linux. Manages config for shell, git, IDE, and Claude Code.
 If you are making changes to this repo then it is this CLAUDE.md (./CLAUDE.md) you should change.
-The ./claude_setup/CLAUDE.md is the global one symlinked to ~/.claude/CLAUDE.md. DO NOT CHANGE THIS UNLESS SPECIFICALLY ASKED.
+The ./claude_setup/CLAUDE.md is the global one copied to ~/.claude/CLAUDE.md. DO NOT CHANGE THIS UNLESS SPECIFICALLY ASKED.
 
 ## Structure
 
@@ -14,10 +14,10 @@ packages/
   install_packages.sh # System packages (apt), uv, Claude Code, starship, zoxide, eza, ripgrep, fzf
 
 git/
-  .gitconfig-linux   # Linux/WSL git config (symlinked to ~/.gitconfig)
+  .gitconfig-linux   # Linux/WSL git config (copied to ~/.gitconfig)
   .gitconfig-windows # Windows git config (symlinked to ~/.gitconfig)
   git_install.ps1    # Windows: symlinks .gitconfig-windows + GitHub SSH setup
-  git_install.sh     # Linux: symlinks .gitconfig-linux + GitHub SSH setup
+  git_install.sh     # Linux: copies .gitconfig-linux to ~/.gitconfig + GitHub SSH setup
 
 ide/
   vscode_settings.json    # VS Code user settings (symlinked to Code/User/settings.json)
@@ -31,20 +31,20 @@ shell/
   .zshrc             # Zsh-specific: zinit, plugins (syntax highlighting, autosuggestions, completions), fzf
   prompt.bash        # Bash prompt: user@host: path [git] $ (uses __git_ps1)
   prompt.zsh         # Zsh prompt: user@host: path [git] $ (uses __git_ps1)
-  install_shell.sh   # Linux: symlinks shell configs, sets zsh as default
+  install_shell.sh   # Linux: copies shell configs, sets zsh as default
   profile.ps1        # PowerShell profile (symlinked to WindowsPowerShell dir)
 
 claude_setup/
   settings.yaml           # Source of truth for Claude Code settings (has comments)
   generated-settings.json # Auto-generated from yaml - do NOT edit directly
-  CLAUDE.md               # Global Claude Code instructions (symlinked to ~/.claude/)
+  CLAUDE.md               # Global Claude Code instructions (copied to ~/.claude/)
   install_claude.ps1      # Windows: converts yaml, symlinks, runs shared config
   install_claude.sh       # Linux: same
   configure_claude.sh     # Shared claude CLI commands (plugins, MCPs, hooks, skills)
   statusline/
     statusline.ps1        # Windows statusline script
     statusline.sh         # Linux statusline script (uses uv/python for JSON parsing)
-  hooks/                  # Symlinked as directory to ~/.claude/hooks
+  hooks/                  # Copied to ~/.claude/hooks
     event-logger.py       # Logs hook events to ~/.claude/hooks-logs/
     encourage_skill_usage.py  # UserPromptSubmit hook: suggests relevant skills via Haiku
   skills/
@@ -58,7 +58,7 @@ claude_setup/
 - `install.sh` is the single entry point: installs packages/tools, then configures shell, git, IDE, and Claude
 - Each subdirectory has its own install script in both `.ps1` (Windows) and `.sh` (Linux) variants
 - Shell setup: zsh is default, bash is configured as fallback. Shared env/aliases in `.profile`, shell-specific config in `.bashrc`/`.zshrc`, prompts in `prompt.bash`/`prompt.zsh`
-- Tools installed: uv, fzf (fuzzy finder), zoxide (smart cd), eza (modern ls), ripgrep (fast grep), starship (prompt, available but not currently used)
+- Tools installed: docker, uv, fzf (fuzzy finder), zoxide (smart cd), eza (modern ls), ripgrep (fast grep), starship (prompt, available but not currently used)
 - `settings.yaml` uses placeholders replaced at install time per platform:
   - `__STATUSLINE_COMMAND__` → statusline invocation (bash vs powershell)
   - `__TEMP_DIR__` → `/tmp` (Linux) or `//tmp` (Windows)
@@ -78,6 +78,6 @@ claude_setup/
 
 ## Known Issues / Gotchas
 
-- `~/.claude/settings.json` must be a **regular file**, not a symlink. Bubblewrap (bwrap) sandbox can't resolve symlinks when setting up bind mounts, causing all Bash commands to fail. `install_claude.sh` uses `cp` not `ln -sfn`.
+- **All dotfiles in `~` and `~/.claude` must be regular files, not symlinks.** Bubblewrap (bwrap) sandbox can't resolve symlinks when setting up bind mounts, causing all Bash commands to fail. All Linux install scripts use `cp` not `ln -sfn`. This applies to: `~/.bashrc`, `~/.zshrc`, `~/.profile`, `~/.gitconfig`, `~/.claude/settings.json`, `~/.claude/CLAUDE.md`, `~/.claude/statusline.sh`, `~/.claude/hooks/`.
 - Sandbox config is read at Claude session launch time — changes require restarting Claude Code.
 - `gh auth token` returns short-lived OAuth tokens (`gho_*`). The `GITHUB_PERSONAL_ACCESS_TOKEN` env var is set dynamically in `.profile` so it refreshes each shell session.

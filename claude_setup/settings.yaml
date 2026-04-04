@@ -200,12 +200,16 @@ sandbox:
   enabled: true
   autoAllowBashIfSandboxed: true
   allowUnsandboxedCommands: false
+  excludedCommands:
+    - "docker *"
 
   filesystem:
     allowRead:
       - "~/.claude"
       - "~/source"
       - "~/.cache"
+      # Docker socket
+      - "/var/run/docker.sock"
       # Windows only (removed on Linux)
       - "__APPDATA_DIR__"
     allowWrite:
@@ -213,6 +217,8 @@ sandbox:
       - "~/source"
       - "~/.cache"
       - "~/.claude"
+      # Docker socket
+      - "/var/run/docker.sock"
   network:
     allowedDomains:
       - "github.com"
@@ -221,6 +227,10 @@ sandbox:
       - "registry.npmjs.org"
       - "api.github.com"
       - "mcp-proxy.anthropic.com"
+      # Docker
+      - "registry-1.docker.io"
+      - "auth.docker.io"
+      - "production.cloudflare.docker.com"
 
 
 

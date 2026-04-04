@@ -8,7 +8,7 @@ echo "Installing system packages and tools..."
 # =========================
 
 echo ""
-echo "[1/8] Installing system packages..."
+echo "[1/9] Installing system packages..."
 sudo apt-get update -qq
 sudo apt-get install -y -qq \
     build-essential \
@@ -37,11 +37,42 @@ fi
 # =========================
 
 # =========================
-# 2. Install Node.js (via NodeSource LTS)
+# 2. Install Docker Engine (via official apt repo)
 # =========================
 
 echo ""
-echo "[2/8] Installing Node.js..."
+echo "[2/9] Installing Docker..."
+if command -v docker > /dev/null; then
+    echo "  docker already installed: $(docker --version)"
+    sudo usermod -aG docker "$USER"
+else
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+    sudo tee /etc/apt/sources.list.d/docker.sources > /dev/null <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+
+    sudo apt-get update -qq
+    sudo apt-get install -y -qq docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+    sudo usermod -aG docker "$USER"
+    echo "  Installed: $(docker --version)"
+    echo "  NOTE: Log out and back in for docker group membership to take effect"
+fi
+
+# =========================
+# 3. Install Node.js (via NodeSource LTS)
+# =========================
+
+echo ""
+echo "[3/9] Installing Node.js..."
 if command -v node > /dev/null; then
     echo "  node already installed: $(node --version)"
 else
@@ -51,11 +82,11 @@ else
 fi
 
 # =========================
-# 3. Install Rust (via rustup)
+# 4. Install Rust (via rustup)
 # =========================
 
 echo ""
-echo "[3/8] Installing Rust..."
+echo "[4/9] Installing Rust..."
 if command -v cargo > /dev/null; then
     echo "  cargo already installed: $(cargo --version)"
 else
@@ -65,11 +96,11 @@ else
 fi
 
 # =========================
-# 4. Install uv (Python toolchain)
+# 5. Install uv (Python toolchain)
 # =========================
 
 echo ""
-echo "[4/8] Installing uv..."
+echo "[5/9] Installing uv..."
 if command -v uv > /dev/null; then
     echo "  uv already installed: $(uv --version)"
 else
@@ -79,11 +110,11 @@ else
 fi
 
 # =========================
-# 3. Install Claude Code
+# 6. Install Claude Code
 # =========================
 
 echo ""
-echo "[5/8] Installing Claude Code..."
+echo "[6/9] Installing Claude Code..."
 if command -v claude > /dev/null; then
     echo "  Claude Code already installed: $(claude --version)"
 else
@@ -92,11 +123,11 @@ else
 fi
 
 # =========================
-# 4. Install starship prompt
+# 7. Install starship prompt
 # =========================
 
 echo ""
-echo "[6/8] Installing starship..."
+echo "[7/9] Installing starship..."
 if command -v starship > /dev/null; then
     echo "  starship already installed: $(starship --version)"
 else
@@ -105,11 +136,11 @@ else
 fi
 
 # =========================
-# 5. Install zoxide
+# 8. Install zoxide
 # =========================
 
 echo ""
-echo "[7/8] Installing zoxide..."
+echo "[8/9] Installing zoxide..."
 if command -v zoxide > /dev/null; then
     echo "  zoxide already installed: $(zoxide --version)"
 else

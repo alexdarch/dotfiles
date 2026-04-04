@@ -5,10 +5,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 
 echo "Installing shell config..."
 
-# Symlink dotfiles
-ln -sfn "$SCRIPT_DIR/.profile" "$HOME/.profile"
-ln -sfn "$SCRIPT_DIR/.bashrc" "$HOME/.bashrc"
-ln -sfn "$SCRIPT_DIR/.zshrc" "$HOME/.zshrc"
+# Copy dotfiles (not symlink — bubblewrap can't resolve symlinks for bind mounts)
+cp "$SCRIPT_DIR/.profile" "$HOME/.profile"
+cp "$SCRIPT_DIR/.bashrc" "$HOME/.bashrc"
+cp "$SCRIPT_DIR/.zshrc" "$HOME/.zshrc"
 
 # Set zsh as default shell (skip if already set)
 if [ "$(basename "$SHELL")" != "zsh" ]; then

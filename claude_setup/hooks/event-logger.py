@@ -8,7 +8,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-def get_log_file_path() -> Path
+def get_log_file_path() -> Path:
     log_dir = Path.home() / ".claude" / "hooks-logs"
     log_dir.mkdir(parents=True, exist_ok=True)
     return log_dir / f"{datetime.now().strftime('%Y-%m-%d')}.jsonl"
@@ -39,13 +39,13 @@ def main() -> None:
     stdin_data = sys.stdin.read()
 
     try: 
-        data = json.loads(stdin_data) if stdin_dat else {}
+        data = json.loads(stdin_data) if stdin_data else {}
     except json.JSONDecodeError:
         data = {"_raw": stdin_data }
 
     event = {
         "ts": datetime.now().isoformat(),
-        "hook_evnet_name": data.get("hook_event_name", "unknown"),
+        "hook_event_name": data.get("hook_event_name", "unknown"),
         "cwd": os.getcwd(),
         "data": process(data),
     }
