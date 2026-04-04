@@ -1,14 +1,15 @@
 # Dotfiles
 
-Cross-platform dotfiles for Windows (primary) and Linux. Manages config for git, IDE, shell, and Claude Code.
+Cross-platform dotfiles for WSL2 (primary), Windows, and Linux. Manages config for git, IDE, shell, and Claude Code.
 If you are making changes to this repo then it is this CLAUDE.md (./CLAUDE.md) you should change.
 The ./claude_setup/CLAUDE.md is the global one symlinked to ~/.claude/CLAUDE.md. DO NOT CHANGE THIS UNLESS SPECIFICALLY ASKED.
 
 ## Structure
 
 ```
-install.ps1          # Windows entry point - runs all sub-installers
-install.sh           # Linux entry point - runs all sub-installers
+wsl_bootstrap.sh     # WSL2 first-time setup: packages, uv, claude, then runs install.sh
+install.ps1          # Windows entry point - installs WSL2 (previous native setup commented out)
+install.sh           # Linux/WSL2 entry point - runs all sub-installers
 
 git/
   .gitconfig         # Global git config (symlinked to ~/.gitconfig)
@@ -43,10 +44,9 @@ claude_setup/
 
 ## Conventions
 
+- Primary dev environment is WSL2; `install.ps1` just bootstraps WSL
+- `wsl_bootstrap.sh` handles first-time WSL2 setup (packages, uv, claude), then calls `install.sh`
 - Each subdirectory has its own install script in both `.ps1` (Windows) and `.sh` (Linux) variants
-- The root `install.ps1`/`install.sh` calls all sub-installers
-- Windows symlinks use `cmd /c mklink` (not `New-Item -SymbolicLink`) because it works with Developer Mode without admin
-- Developer Mode must be enabled on Windows for symlinks to work
 - `settings.yaml` uses `__STATUSLINE_COMMAND__` as a placeholder, replaced at install time per platform
 - `generated-settings.json` is gitignored output - always regenerate from `settings.yaml`
 - Shared cross-platform logic (claude CLI commands) goes in `.sh` files called via `bash` from both platforms
