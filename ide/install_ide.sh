@@ -5,7 +5,16 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 EXTENSIONS_FILE="$SCRIPT_DIR/vscode_extensions.txt"
 
 # =======================
-# 1. VS Code extensions
+# 1. VS Code user settings
+# =======================
+
+echo "Symlinking VS Code settings..."
+VSCODE_SETTINGS_DIR="$HOME/.config/Code/User"
+mkdir -p "$VSCODE_SETTINGS_DIR"
+ln -sfn "$SCRIPT_DIR/vscode_settings.json" "$VSCODE_SETTINGS_DIR/settings.json"
+
+# =======================
+# 2. VS Code extensions
 # =======================
 
 URL_ROOT="https://marketplace.visualstudio.com"

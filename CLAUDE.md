@@ -17,8 +17,9 @@ git/
   git_install.sh     # Linux: same
 
 ide/
+  vscode_settings.json    # VS Code user settings (symlinked to Code/User/settings.json)
   vscode_extensions.txt   # Extension list, supports pinned versions (e.g. ext@1.0.0)
-  install_ide.ps1         # Windows: installs VS Code extensions
+  install_ide.ps1         # Windows: symlinks settings, installs extensions
   install_ide.sh          # Linux: same
 
 shell/

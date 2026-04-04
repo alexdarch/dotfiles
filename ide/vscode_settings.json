@@ -1,0 +1,7 @@
+{
+    "files.autoSave": "afterDelay",
+    "security.allowedUNCHosts": [
+        "wsl$"
+    ],
+    "terminal.integrated.defaultProfile.linux": "bash"
+}

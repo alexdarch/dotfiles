@@ -75,6 +75,22 @@ function Get-Extensions {
     }
 }
 
+# =======================
+# 2. VS Code user settings
+# =======================
+
+Write-Host "Symlinking VS Code settings..." -ForegroundColor Cyan
+$VscodeSettingsDir = Join-Path $env:APPDATA "Code\User"
+if (-not (Test-Path $VscodeSettingsDir)) { New-Item -ItemType Directory -Path $VscodeSettingsDir | Out-Null }
+$SettingsLink = Join-Path $VscodeSettingsDir "settings.json"
+$SettingsTarget = Join-Path $PSScriptRoot "vscode_settings.json"
+if (Test-Path $SettingsLink) { Remove-Item $SettingsLink -Force }
+cmd /c mklink "$SettingsLink" "$SettingsTarget"
+
+# =======================
+# 3. VS Code extensions
+# =======================
+
 Write-Host "Installing VS Code extensions..." -ForegroundColor Cyan
 
 $InstallArgs = @()
