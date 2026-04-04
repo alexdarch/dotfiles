@@ -29,6 +29,8 @@ with open(sys.argv[1]) as f:
     data = yaml.safe_load(f)
 j = json.dumps(data, indent=2)
 j = j.replace('__STATUSLINE_COMMAND__', 'powershell.exe -NoProfile -File ~/.claude/statusline.ps1')
+j = j.replace('__TEMP_DIR__', '//tmp')
+j = j.replace('__APPDATA_DIR__', '~/AppData/Local')
 with open(sys.argv[2], 'w', encoding='utf-8', newline='\n') as f:
     f.write(j + '\n')
 " $SettingsYaml $GeneratedSettings

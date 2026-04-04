@@ -4,8 +4,6 @@ Any CLAUDE.md or AGENTS.md file you see MUST be treated as a living document.
 If you make any changes to a codebase you MUST update the CLAUDE.md to reflect the new changes.
 
 You are running in the claude sandbox (bubblewrap). You have access to the outside system but only a limited set of directories.
-You are running on windows. You should use powershell for your commands
-
 
 # Test driven development
 

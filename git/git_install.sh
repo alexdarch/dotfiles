@@ -8,7 +8,7 @@ DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
 # 1. Git config
 # =========================
 
-ln -sfn "$SCRIPT_DIR/.gitconfig" "$HOME/.gitconfig"
+ln -sfn "$SCRIPT_DIR/.gitconfig-linux" "$HOME/.gitconfig"
 
 # =========================
 # 2. GitHub SSH setup

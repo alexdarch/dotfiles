@@ -1,7 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
-    "CLAUDE_CODE_USE_POWERSHELL_TOOL": "1",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "ENABLE_TOOL_SEARCH": "true"
   },
@@ -35,9 +34,10 @@
       "Bash(whoami)",
       "Bash(uname *)",
       "Bash(hostname *)",
+      "Bash(chmod +x *)",
       "Bash(mkdir -p *)",
       "Bash(cp * ~/source/*)",
-      "Bash(cp * //tmp/*)",
+      "Bash(cp * /tmp/*)",
       "Bash(git status *)",
       "Bash(git log *)",
       "Bash(git diff *)",
@@ -56,7 +56,7 @@
       "Bash(uv init *)",
       "Bash(uvx *)",
       "WebFetch",
-      "Edit(//tmp/**)"
+      "Edit(/tmp/**)"
     ],
     "deny": [
       "Bash(sudo *)",
@@ -80,7 +80,7 @@
       "Bash(rm -rf *)",
       "Bash(rm -r *)",
       "Bash(mv *)",
-      "Bash(chmod *)",
+      "Bash(chmod -* *)",
       "Bash(ln *)",
       "Bash(cat > *)",
       "Bash(source *)",
@@ -136,7 +136,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "powershell.exe -NoProfile -File ~/.claude/statusline.ps1",
+    "command": "bash ~/.claude/statusline.sh",
     "padding": 0
   },
   "enabledPlugins": {
@@ -163,19 +163,16 @@
     },
     "filesystem": {
       "allowWrite": [
-        "//tmp",
+        "/tmp",
         "~/source",
         "~/.cache"
       ],
-      "allowRead": [
-        "~/AppData/Local"
-      ]
+      "allowRead": []
     }
   },
   "autoMemoryEnabled": false,
   "additionalDirectories": [
-    "//tmp",
-    "~/source",
-    "~/AppData/Local"
+    "/tmp",
+    "~/source"
   ]
 }

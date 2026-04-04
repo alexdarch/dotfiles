@@ -1,0 +1,24 @@
+[user]
+    email = alex.darch@btinternet.com
+    name = alex darch
+[alias]
+    checkoutr = checkout
+[push]
+    default = current
+    autoSetupRemote = true
+[pull]
+    rebase = false
+[merge]
+    defaultStrategy = ort
+[gc]
+    auto = 0
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+[core]
+    autocrlf = input
+    symlinks = true
+[init]
+    defaultbranch = main

@@ -7,14 +7,17 @@ The ./claude_setup/CLAUDE.md is the global one symlinked to ~/.claude/CLAUDE.md.
 ## Structure
 
 ```
-wsl_bootstrap.sh     # WSL2 first-time setup: packages, uv, claude, then runs install.sh
+install.sh           # Single entry point — packages, git, IDE, claude setup, remote switch
 install.ps1          # Windows entry point - installs WSL2 (previous native setup commented out)
-install.sh           # Linux/WSL2 entry point - runs all sub-installers
+
+packages/
+  install_packages.sh # System packages (apt), uv, Claude Code
 
 git/
-  .gitconfig         # Global git config (symlinked to ~/.gitconfig)
-  git_install.ps1    # Windows: symlinks .gitconfig + GitHub SSH setup
-  git_install.sh     # Linux: same
+  .gitconfig-linux   # Linux/WSL git config (symlinked to ~/.gitconfig)
+  .gitconfig-windows # Windows git config (symlinked to ~/.gitconfig)
+  git_install.ps1    # Windows: symlinks .gitconfig-windows + GitHub SSH setup
+  git_install.sh     # Linux: symlinks .gitconfig-linux + GitHub SSH setup
 
 ide/
   vscode_settings.json    # VS Code user settings (symlinked to Code/User/settings.json)
@@ -46,8 +49,12 @@ claude_setup/
 ## Conventions
 
 - Primary dev environment is WSL2; `install.ps1` just bootstraps WSL
-- `wsl_bootstrap.sh` handles first-time WSL2 setup (packages, uv, claude), then calls `install.sh`
+- `install.sh` is the single entry point: installs packages/tools, then configures git, IDE, and Claude
 - Each subdirectory has its own install script in both `.ps1` (Windows) and `.sh` (Linux) variants
-- `settings.yaml` uses `__STATUSLINE_COMMAND__` as a placeholder, replaced at install time per platform
+- `settings.yaml` uses placeholders replaced at install time per platform:
+  - `__STATUSLINE_COMMAND__` → statusline invocation (bash vs powershell)
+  - `__TEMP_DIR__` → `/tmp` (Linux) or `//tmp` (Windows)
+  - `__APPDATA_DIR__` → `~/AppData/Local` (Windows only, removed on Linux)
+  - `CLAUDE_CODE_USE_POWERSHELL_TOOL` env var is removed on Linux
 - `generated-settings.json` is gitignored output - always regenerate from `settings.yaml`
 - Shared cross-platform logic (claude CLI commands) goes in `.sh` files called via `bash` from both platforms

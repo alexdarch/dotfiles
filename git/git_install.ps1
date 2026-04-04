@@ -1,5 +1,5 @@
 $DotfilesDir = Split-Path $PSScriptRoot
-$GitconfigTarget = Join-Path $PSScriptRoot ".gitconfig"
+$GitconfigTarget = Join-Path $PSScriptRoot ".gitconfig-windows"
 $GitconfigLink = Join-Path $HOME ".gitconfig"
 
 # =========================

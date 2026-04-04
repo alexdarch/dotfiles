@@ -44,9 +44,10 @@ permissions:
     - "Bash(hostname *)"
 
     # Write (scoped to safe directories)
+    - "Bash(chmod +x *)"
     - "Bash(mkdir -p *)"
     - "Bash(cp * ~/source/*)"
-    - "Bash(cp * //tmp/*)"
+    - "Bash(cp * __TEMP_DIR__/*)"
 
     # git
     - "Bash(git status *)"
@@ -75,11 +76,7 @@ permissions:
     - "WebFetch"
 
     # Edit
-    - "Edit(//tmp/**)"
-    # - "Edit(//tmp/**)"
-    # - "Edit(//tmp/**)"
-    # - "Edit(//tmp/**)"
-    # - "Edit(//tmp/**)"
+    - "Edit(__TEMP_DIR__/**)"
 
     # Mcps
     # github
@@ -125,7 +122,7 @@ permissions:
     - "Bash(rm -rf *)"
     - "Bash(rm -r *)"
     - "Bash(mv *)"
-    - "Bash(chmod *)"
+    - "Bash(chmod -* *)"
     - "Bash(ln *)"
 
     # Write to arbitrary locations
@@ -143,16 +140,10 @@ permissions:
 # can operate. Does NOT affect Bash subprocesses — those are governed by sandbox.filesystem.
 # Think of this as "IDE-level" access: Claude can read/edit files here, subject to permission mode.
 additionalDirectories:
-  # in windows `/c/User/<username>` == `~/`
-  # The above is the "linux-y" version of C:\\User\<username>
-  # alias for ~/AppData/Local/Temp
-  - "//tmp"
-
-  # all my code
+  - "__TEMP_DIR__"
   - "~/source"
-
-  # Where lots of things are installed
-  - "~/AppData/Local"
+  # Windows only — installed apps dir (removed on Linux)
+  - "__APPDATA_DIR__"
 autoMemoryEnabled: false
 hooks: 
   PermissionRequest:
@@ -203,9 +194,10 @@ sandbox:
 
   filesystem:
     allowRead:
-      - "~/AppData/Local"
+      # Windows only (removed on Linux)
+      - "__APPDATA_DIR__"
     allowWrite:
-      - "//tmp"
+      - "__TEMP_DIR__"
       - "~/source"
       - "~/.cache"
   network:
