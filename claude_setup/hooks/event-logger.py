@@ -1,5 +1,9 @@
 #!/usr/bin/env -S uv run --script
-
+# /// script
+# requires-python = ">=3.12"
+# dependencies = []
+# ///
+"""Hook that logs events to ~/.claude/hooks-logs/<date>.jsonl for debugging."""
 
 import sys
 import json
@@ -8,17 +12,21 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+
+
 def get_log_file_path() -> Path:
     log_dir = Path.home() / ".claude" / "hooks-logs"
     log_dir.mkdir(parents=True, exist_ok=True)
     return log_dir / f"{datetime.now().strftime('%Y-%m-%d')}.jsonl"
 
-def truncate(value: str, max_len: int=2000) -> str:
+
+def truncate(value: str, max_len: int = 2000) -> str:
     if isinstance(value, str) and len(value) > max_len:
         return f"{value[:max_len]}... ({len(value)} chars)"
     return value
 
-def process(value: Any, max_str: int=2000, max_list: int=50) -> str:
+
+def process(value: Any, max_str: int = 2000, max_list: int = 50) -> Any:
     if value is None or isinstance(value, bool):
         return value
     if isinstance(value, str):
@@ -34,14 +42,14 @@ def process(value: Any, max_str: int=2000, max_list: int=50) -> str:
         return {str(k): process(v) for k, v in value.items()}
     return str(value)
 
-def main() -> None:
 
+def main() -> None:
     stdin_data = sys.stdin.read()
 
-    try: 
+    try:
         data = json.loads(stdin_data) if stdin_data else {}
     except json.JSONDecodeError:
-        data = {"_raw": stdin_data }
+        data = {"_raw": stdin_data}
 
     event = {
         "ts": datetime.now().isoformat(),

@@ -89,8 +89,8 @@ switch ($choice) {
             "Git.Git"
         )
         foreach ($pkg in $WingetPackages) {
-            $installed = winget list --id $pkg --accept-source-agreements 2>&1
-            if ($LASTEXITCODE -eq 0 -and $installed -match $pkg) {
+            $null = winget list --id $pkg --exact --accept-source-agreements 2>$null
+            if ($LASTEXITCODE -eq 0) {
                 Write-Host "  $pkg already installed" -ForegroundColor Green
             } else {
                 Write-Host "  Installing $pkg..." -ForegroundColor Cyan
