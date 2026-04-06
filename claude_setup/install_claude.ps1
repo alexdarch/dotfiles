@@ -20,20 +20,9 @@ Write-Host "Installing claude CLI config..." -ForegroundColor Cyan
 $ClaudeDir = Join-Path $HOME ".claude"
 if (-not (Test-Path $ClaudeDir)) { New-Item -ItemType Directory -Path $ClaudeDir | Out-Null }
 
-# Generate settings.json from yaml using uv + pyyaml (powershell-yaml mangles nested structures)
-$GeneratedSettings = Join-Path $ScriptDir "generated-settings.json"
-$SettingsYaml = Join-Path $ScriptDir "settings.yaml"
-& uv run --with pyyaml --no-project python -c "
-import yaml, json, sys
-with open(sys.argv[1]) as f:
-    data = yaml.safe_load(f)
-j = json.dumps(data, indent=2)
-j = j.replace('__STATUSLINE_COMMAND__', 'powershell.exe -NoProfile -File ~/.claude/statusline.ps1')
-j = j.replace('__TEMP_DIR__', '//tmp')
-j = j.replace('__APPDATA_DIR__', '~/AppData/Local')
-with open(sys.argv[2], 'w', encoding='utf-8', newline='\n') as f:
-    f.write(j + '\n')
-" $SettingsYaml $GeneratedSettings
+# Generate settings.json from yaml
+$GenerateScript = Join-Path $ScriptDir "generate_settings.py"
+& uv run --no-project --script $GenerateScript windows
 
 # Build skills.yaml from all SKILL.md files under ~/.claude
 Write-Host "Building skills.yaml..." -ForegroundColor Cyan

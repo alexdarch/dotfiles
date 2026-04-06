@@ -36,6 +36,7 @@ shell/
 
 claude_setup/
   settings.yaml           # Source of truth for Claude Code settings (has comments)
+  generate_settings.py    # Generates settings.json from yaml (takes 'linux' or 'windows' arg)
   generated-settings.json # Auto-generated from yaml - do NOT edit directly
   CLAUDE.md               # Global Claude Code instructions (copied to ~/.claude/)
   install_claude.ps1      # Windows: converts yaml, symlinks, runs shared config
