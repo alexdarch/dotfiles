@@ -195,8 +195,9 @@ model: "opus[1m]"
 
 extraKnownMarketplaces:
   superpowers-dev:
-    source: git
-    url: "https://github.com/obra/superpowers.git"
+    source: 
+      source: git
+      url: "https://github.com/obra/superpowers.git"
   
 # Sandbox: OS-level process isolation for Bash subprocesses.
 # Uses Seatbelt on macOS, bubblewrap on Linux/WSL2.
