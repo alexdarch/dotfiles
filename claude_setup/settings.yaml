@@ -158,8 +158,8 @@ thinking:
 hooks:
   PreToolUse:
   - hooks:
-    type: command
-    command: "uv run --no-project ~/.claude/hooks/block-compound-statements.py"
+    - type: command
+      command: "uv run --no-project ~/.claude/hooks/block-compound-statements.py"
   PermissionRequest:
   - hooks:
     - type: command
