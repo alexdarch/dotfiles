@@ -19,12 +19,14 @@ PLATFORM_CONFIG = {
     "linux": {
         "statusline_command": "bash ~/.claude/statusline.sh",
         "temp_dir": "/tmp",
+        "temp_dir2": "//tmp",
         "remove_env_keys": ["CLAUDE_CODE_USE_POWERSHELL_TOOL"],
         "remove_appdata_lines": True,
     },
     "windows": {
         "statusline_command": "powershell.exe -NoProfile -File ~/.claude/statusline.ps1",
-        "temp_dir": "//tmp",
+        "temp_dir": "/tmp",
+        "temp_dir2": "//tmp",
         "appdata_dir": "~/AppData/Local",
         "remove_env_keys": [],
         "remove_appdata_lines": False,
@@ -45,6 +47,8 @@ def generate(yaml_path: Path, output_path: Path, platform: str) -> None:
 
     j = j.replace("__STATUSLINE_COMMAND__", config["statusline_command"])
     j = j.replace("__TEMP_DIR__", config["temp_dir"])
+    j = j.replace("__TEMP_DIR2__", config["temp_dir2"])
+
 
     if config["remove_appdata_lines"]:
         j = "\n".join(l for l in j.splitlines() if "__APPDATA_DIR__" not in l)

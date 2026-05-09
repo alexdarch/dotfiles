@@ -52,6 +52,7 @@ permissions:
     - "Bash(mkdir -p *)"
     - "Bash(cp * ~/source/*)"
     - "Bash(cp * __TEMP_DIR__/*)"
+    - "Bash(cp * __TEMP_DIR2__/*)"
 
     # git
     - "Bash(git status *)"
@@ -74,8 +75,14 @@ permissions:
     - "Bash(uv *)"
     - "Bash(uvx *)"
 
+
+    - "Read(~/**)"
+    - "Read(__TEMP_DIR__/**)"
+    - "Read(__TEMP_DIR2__/**)"
+
     # Edit
     - "Edit(__TEMP_DIR__/**)"
+    - "Edit(__TEMP_DIR2__/**)"
     - "Edit(~/**)"
 
     # MCPs
@@ -145,6 +152,7 @@ permissions:
   # Think of this as "IDE-level" access: Claude can read/edit files here, subject to permission mode.
   additionalDirectories:
     - "__TEMP_DIR__"
+    - "__TEMP_DIR2__"
     - "~/source"
     # Windows only — installed apps dir (removed on Linux)
     - "__APPDATA_DIR__"
@@ -219,6 +227,7 @@ sandbox:
       - "__APPDATA_DIR__"
     allowWrite:
       - "__TEMP_DIR__"
+      - "__TEMP_DIR2__"
       - "~/source"
       - "~/.cache"
       - "~/.claude"

@@ -5,6 +5,12 @@ If you make any changes to a codebase you MUST update the CLAUDE.md to reflect t
 
 You are running in the claude sandbox (bubblewrap). You have access to the outside system but only a limited set of directories.
 
+## Temp files
+- Prefer the `Write` tool over `cat > FILE <<EOF` heredocs, especially when file content contains braces with
+quotes (`{ x = "y" }`) — heredocs trip the brace-quote obfuscation detector.
+- For Bash temp paths, use literal `/tmp/claude-1000/...` instead of `$TMPDIR` — the static path-checker can't
+verify env-var paths against sandbox bounds.
+
 # Test driven development
 
 You MUST ALWAYS USE Red/Green TDD for all feature development tasks
