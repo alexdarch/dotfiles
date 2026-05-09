@@ -71,13 +71,8 @@ permissions:
     - "Bash(gh auth status)"
 
     # python (tightened — uv run can execute arbitrary code)
-    - "Bash(uv run --no-project --script *)"
-    - "Bash(uv run --no-project --with *)"
-    - "Bash(uv run --no-project python *)"
-    - "Bash(uv init *)"
+    - "Bash(uv *)"
     - "Bash(uvx *)"
-    
-
 
     # Edit
     - "Edit(__TEMP_DIR__/**)"
@@ -145,16 +140,26 @@ permissions:
     - "Read(~/.ssh/**)"
     - "Read(~/.aws/**)"
 
-# additionalDirectories: extends where Claude's built-in file tools (Read, Edit, Glob, Grep)
-# can operate. Does NOT affect Bash subprocesses — those are governed by sandbox.filesystem.
-# Think of this as "IDE-level" access: Claude can read/edit files here, subject to permission mode.
-additionalDirectories:
-  - "__TEMP_DIR__"
-  - "~/source"
-  # Windows only — installed apps dir (removed on Linux)
-  - "__APPDATA_DIR__"
+  # additionalDirectories: extends where Claude's built-in file tools (Read, Edit, Glob, Grep)
+  # can operate. Does NOT affect Bash subprocesses — those are governed by sandbox.filesystem.
+  # Think of this as "IDE-level" access: Claude can read/edit files here, subject to permission mode.
+  additionalDirectories:
+    - "__TEMP_DIR__"
+    - "~/source"
+    # Windows only — installed apps dir (removed on Linux)
+    - "__APPDATA_DIR__"
 autoMemoryEnabled: false
-hooks: 
+
+# Potentially wrong here, maybe type: enabled?
+thinking:
+  type: adaptive
+  display: summarized
+
+hooks:
+  PreToolUse:
+  - hooks:
+    type: command
+    command: "uv run --no-project ~/.claude/hooks/block-compound-statements.py"
   PermissionRequest:
   - hooks:
     - type: command
