@@ -30,14 +30,25 @@ claude plugin install example-skills@anthropic-agent-skills
 # Ralph loop (autonomous iteration)
 claude plugin install ralph-loop@claude-plugins-official
 
+# Frontend design (production-grade frontend interfaces)
+claude plugin install frontend-design@claude-plugins-official
+
+# Context7 (documentation lookup MCP, community-managed)
+claude plugin install context7@claude-plugins-official
+
+# Code review (multi-agent PR review)
+claude plugin install code-review@claude-plugins-official
+
+# Code simplifier (refactor for clarity/consistency)
+claude plugin install code-simplifier@claude-plugins-official
+
 # =======================
 # 2. Configure MCPs
 # =======================
 
 echo "Configuring MCPs..."
 
-# Context7 - documentation finder
-claude mcp add --scope user context7 -- npx -y @upstash/context7-mcp
+# Note: context7 MCP is provided by the context7@claude-plugins-official plugin above.
 
 # GitHub MCP (uses GITHUB_PERSONAL_ACCESS_TOKEN env var from .profile)
 claude mcp add --scope user github -- npx -y @modelcontextprotocol/server-github

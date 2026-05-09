@@ -68,10 +68,22 @@ claude_setup/
 - `generated-settings.json` is gitignored output - always regenerate from `settings.yaml`
 - Shared cross-platform logic (claude CLI commands) goes in `.sh` files called via `bash` from both platforms
 
+## Plugins
+
+Installed via `claude plugin install` in `configure_claude.sh` and explicitly enabled in `settings.yaml`'s `enabledPlugins` map. Marketplaces: `superpowers-dev` (added at install time, declared in `extraKnownMarketplaces`) and `claude-plugins-official` / `anthropic-agent-skills` (built-in).
+
+- **superpowers** (`superpowers-dev`): brainstorming, plan-writing, code-review, TDD and other workflow skills.
+- **example-skills** (`anthropic-agent-skills`): MCP builder, skill creator, frontend-design, etc.
+- **ralph-loop** (`claude-plugins-official`): autonomous iteration loop.
+- **frontend-design** (`claude-plugins-official`): production-grade frontend interface generation.
+- **context7** (`claude-plugins-official`, community-managed): wraps the `@upstash/context7-mcp` server for library/framework documentation lookup.
+- **code-review** (`claude-plugins-official`): multi-agent automated PR review.
+- **code-simplifier** (`claude-plugins-official`): refactoring agent for clarity and consistency.
+
 ## MCP Servers
 
 - **GitHub**: `@modelcontextprotocol/server-github` (stdio, user scope). Uses `GITHUB_PERSONAL_ACCESS_TOKEN` env var set dynamically in `.profile` via `gh auth token`. Do NOT use `@anthropic/github-mcp-server` or `github@claude-plugins-official` — those require a GitHub Copilot subscription.
-- **Context7**: `@upstash/context7-mcp` (stdio, user scope). Documentation lookup for libraries/frameworks.
+- **Context7**: provided by the `context7@claude-plugins-official` plugin (see Plugins section). Documentation lookup for libraries/frameworks. Do NOT also `claude mcp add` it — that would double-register.
 - **IDE**: Built-in MCP for IDE integration (VS Code / JetBrains).
 - **claude.ai managed MCPs** (Slack, Notion, Linear, etc.): Built-in Anthropic integrations served via `mcp-proxy.anthropic.com`. Cannot be removed or disabled via CLI — they're managed server-side. Harmless if unused (just show "needs authentication" in `claude mcp list`).
 - MCP tool permissions are granted via wildcard patterns in `settings.yaml` (e.g. `mcp__github__*`)
