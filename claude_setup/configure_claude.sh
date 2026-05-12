@@ -24,6 +24,9 @@ claude plugin install superpowers@superpowers-dev
 # Anthropic skills marketplace
 claude plugin marketplace add https://github.com/anthropics/skills.git
 
+# Update Marketplaces
+claude plugin marketplace update
+
 # MCP builder + skill creator
 claude plugin install example-skills@anthropic-agent-skills
 
