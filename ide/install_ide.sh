@@ -9,7 +9,11 @@ EXTENSIONS_FILE="$SCRIPT_DIR/vscode_extensions.txt"
 # =======================
 
 echo "Symlinking VS Code settings..."
-VSCODE_SETTINGS_DIR="$HOME/.config/Code/User"
+if [[ "$(uname)" == "Darwin" ]]; then
+    VSCODE_SETTINGS_DIR="$HOME/Library/Application Support/Code/User"
+else
+    VSCODE_SETTINGS_DIR="$HOME/.config/Code/User"
+fi
 mkdir -p "$VSCODE_SETTINGS_DIR"
 ln -sfn "$SCRIPT_DIR/vscode_settings.json" "$VSCODE_SETTINGS_DIR/settings.json"
 
