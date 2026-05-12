@@ -1,6 +1,5 @@
 [user]
-    email = alex.darch@btinternet.com
-    name = alex darch
+
 [alias]
     checkoutr = checkout
 [push]
