@@ -7,12 +7,16 @@ echo "==========================="
 
 # Ensure ~/.local/bin is on PATH (where uv, claude, etc. install to)
 export PATH="$HOME/.local/bin:$PATH"
-grep -qF '/.local/bin' ~/.bashrc 2>/dev/null || echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    grep -qF '/.local/bin' ~/.zprofile 2>/dev/null || printf '\nexport PATH="$HOME/.local/bin:$PATH"\n' >> ~/.zprofile
+else
+    grep -qF '/.local/bin' ~/.bashrc 2>/dev/null || echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+fi
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 
 # Configure passwordless sudo (single-user WSL — safe, and Claude's sandbox denies sudo)
-if [ ! -f "/etc/sudoers.d/$USER" ]; then
+if [[ "$(uname -s)" == "Linux" ]] && [ ! -f "/etc/sudoers.d/$USER" ]; then
     echo "Setting up passwordless sudo..."
     echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee "/etc/sudoers.d/$USER" >/dev/null
     sudo chmod 440 "/etc/sudoers.d/$USER"

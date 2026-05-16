@@ -18,6 +18,9 @@ mohsen1.prettify-json
 mechatroner.rainbow.csv
 adamviola.parquet-explorer
 
+# Claude
+anthropic.claude-code
+
 # Use a 6yr old version of gitlens because the current version is bloadware
 # Also this version has no paywall
 eamodio.gitlens@10.2.3
