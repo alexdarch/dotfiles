@@ -257,7 +257,7 @@ EOF
     if command -v uv > /dev/null; then
         echo "  uv already installed: $(uv --version)"
     else
-        brew install uv
+        curl -LsSf https://astral.sh/uv/install.sh | sh
         echo "  Installed: $(uv --version)"
     fi
 
